@@ -7,7 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // Veritabanından kullanıcıyı sorgula
+    
     $sql = "SELECT id, F_name, password FROM users WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
@@ -17,11 +17,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows == 1) {
         $user = $result->fetch_assoc();
         
-        // Şifre kontrolü
         if (password_verify($password, $user['password'])) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_name'] = $user['F_name'];
-            header("Location: welcome.php"); // Giriş başarılı
+            header("Location: welcome.php"); 
             exit();
         } else {
             echo "Hatalı şifre!";
