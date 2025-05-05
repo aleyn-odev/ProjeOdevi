@@ -1,8 +1,8 @@
 <?php
 $servername = "localhost";
-$username = "root"; // XAMPP için genellikle 'root'
-$password = "";     // XAMPP varsayılan şifresi boştur
-$database = "tixgo_db"; // senin oluşturduğun veritabanı adı
+$username = "root"; 
+$password = "";     
+$database = "tixgo_db"; 
 
 $conn = new mysqli($servername, $username, $password, $database);
 
