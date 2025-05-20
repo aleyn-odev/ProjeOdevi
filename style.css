@@ -135,3 +135,23 @@ button:hover{
     text-decoration:underline;
     color:black;
 }
+.error-message {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid #ef9a9a;
+}
+
+.error-message i {
+    font-size: 1.2rem;
+}
+
+.error-message p {
+    margin: 0;
+    font-size: 0.9rem;
+}
