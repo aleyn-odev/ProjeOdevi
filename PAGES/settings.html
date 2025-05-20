@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ayarlar</title>
+  <link rel="stylesheet" href="settings.css" />
+</head>
+<body>
+  <div class="container">
+    <main class="main-content">
+      <h1>Ayarlar</h1>
+
+      <section class="card notification-settings">
+        <h2>Üniversite Bildirimi</h2>
+        <p>Seçili üniversitenize yeni konser eklendiğinde mail ile bilgilendirilsin mi?</p>
+        <label class="switch">
+          <input type="checkbox" id="notifToggle" />
+          <span class="slider round"></span>
+        </label>
+      </section>
+
+      <section class="card language-settings">
+        <h2>Dil Seçimi</h2>
+        <select id="languageSelect">
+          <option value="tr" selected>Türkçe</option>
+          <option value="en">English</option>
+        </select>
+      </section>
+    </main>
+  </div>
+
+  <script src="settings.js"></script>
+</body>
+</html>
