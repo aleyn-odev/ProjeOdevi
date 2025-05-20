@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Paneli</title>
+  <link rel="stylesheet" href="admin.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <div class="admin-container">
+    <h1>🎤 Admin Paneli</h1>
+
+    <!-- 1) Konser Yönetimi -->
+    <section class="card section">
+      <h2>Konser Yönetimi</h2>
+      <form id="concertForm" class="form-grid">
+        <div class="dropzone" id="concertImageDrop">
+          <p>Görseli buraya sürükle veya tıkla</p>
+          <input type="file" id="concertImage" accept="image/*" hidden/>
+        </div>
+        <div class="form-group">
+          <label for="artist">Sanatçı / Etkinlik Adı</label>
+          <input type="text" id="artist" required/>
+        </div>
+        <div class="form-group">
+          <label for="uniSelect">Üniversite</label>
+          <select id="uniSelect" required>
+            <option value="">Üniversite seçin</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="location">Yer</label>
+          <input type="text" id="location" placeholder="Adres" required/>
+        </div>
+        <div class="form-group">
+          <label for="datetime">Tarih & Saat</label>
+          <!-- 4 haneli yıl kısıtı için pattern eklendi -->
+          <input 
+            type="datetime-local" 
+            id="datetime" 
+            pattern="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}" 
+            title="YYYY-MM-DDThh:mm formatında, yıl 4 haneli olmalı" 
+            required/>
+        </div>
+        <div class="button-group">
+          <button type="button" id="saveConcert" class="btn-primary">Kaydet</button>
+          <button type="button" id="editConcert" class="btn-secondary">Düzenle</button>
+          <button type="button" id="deleteConcert" class="btn-danger">Sil</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- 2) Duyuru Yönetimi -->
+    <section class="card section">
+      <h2>Duyuru Yönetimi</h2>
+      <form id="announcementForm" class="vertical-form">
+        <div class="form-group">
+          <label for="announcementText">Duyuru Metni</label>
+          <textarea id="announcementText" rows="2" placeholder="Yeni duyuru..." required></textarea>
+        </div>
+        <div class="button-group">
+          <button type="button" id="addAnnouncement" class="btn-primary">Ekle</button>
+        </div>
+      </form>
+      <div id="announcementList" class="announcement-list"></div>
+    </section>
+
+    <!-- 3) Hesap Ayarları -->
+    <section class="card section">
+      <h2>Hesap Ayarları</h2>
+      <form id="accountForm" class="vertical-form">
+        <div class="form-group">
+          <label for="adminEmail">E-posta (değiştirilemez)</label>
+          <input type="email" id="adminEmail" disabled value="admin@site.com"/>
+        </div>
+        <div class="form-group">
+          <label for="newPassword">Yeni Şifre</label>
+          <input type="password" id="newPassword" required/>
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Yeni Şifre (Tekrar)</label>
+          <input type="password" id="confirmPassword" required/>
+        </div>
+        <p id="accountMessage" class="message"></p>
+        <button type="button" id="saveAccount" class="btn-primary">Kaydet</button>
+      </form>
+    </section>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>
