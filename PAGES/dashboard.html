@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <h2 class="greeting">Merhaba, <span id="student-name">[AD]</span></h2>
+
+  <div class="card-row">
+    <div class="info-card" id="ticket-card">
+      <h3>Toplam Bilet</h3>
+      <p id="ticket-count">0</p>
+    </div>
+    <div class="info-card" id="university-card">
+      <h3>Üniversiten</h3>
+      <p id="university-name">[Üniversite]</p>
+    </div>
+  </div>
+
+  <div class="wide-card" id="upcoming-event">
+    <h3>Yaklaşan Etkinlik</h3>
+    <div class="event-content">
+      <img id="event-image" src="placeholder.jpg" alt="Etkinlik Görseli" />
+      <div>
+        <p id="event-title">Etkinlik Adı</p>
+        <p id="event-date">Etkinlik Tarihi</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="wide-card" id="announcements">
+    <h3>Duyurular</h3>
+    <ul id="announcement-list">
+      <li>Henüz duyuru yok.</li>
+    </ul>
+  </div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>
