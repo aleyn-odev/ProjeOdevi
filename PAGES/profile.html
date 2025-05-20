@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Profil</title>
+  <link rel="stylesheet" href="profile.css" />
+</head>
+<body>
+  <div class="profile-container">
+    <h2>Profil Bilgilerim</h2>
+    <form id="profileForm">
+      <div class="form-group">
+        <label for="fullName">Ad Soyad</label>
+        <input type="text" id="fullName" disabled />
+      </div>
+      <div class="form-group">
+        <label for="email">E-posta</label>
+        <input type="email" id="email" disabled />
+      </div>
+      <div class="form-group">
+        <label for="university">Üniversite</label>
+        <select id="university">
+          <option value="">Üniversite seçin</option>
+          <!-- Üniversite seçenekleri backend'den gelecek -->
+        </select>
+        <button type="button" id="saveUniversityBtn">Kaydet</button>
+      </div>
+    </form>
+
+    <hr />
+
+    <h3>Şifre Yenile</h3>
+    <form id="passwordForm">
+      <div class="form-group">
+        <label for="newPassword">Yeni Şifre</label>
+        <input type="password" id="newPassword" />
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword">Yeni Şifre (Tekrar)</label>
+        <input type="password" id="confirmPassword" />
+      </div>
+      <button type="button" id="savePasswordBtn">Kaydet</button>
+      <p id="passwordMessage" class="message"></p>
+    </form>
+  </div>
+
+  <script src="profile.js"></script>
+</body>
+</html>
