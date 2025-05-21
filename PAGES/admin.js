@@ -1,77 +1,148 @@
-// Dropzone
-const dropzone = document.getElementById("concertImageDrop");
-const fileInput = document.getElementById("concertImage");
-dropzone.addEventListener("click", () => fileInput.click());
-dropzone.addEventListener("dragover", e => {
-  e.preventDefault(); dropzone.classList.add("dragover");
-});
-dropzone.addEventListener("dragleave", () => dropzone.classList.remove("dragover"));
-dropzone.addEventListener("drop", e => {
-  e.preventDefault();
-  dropzone.classList.remove("dragover");
-  fileInput.files = e.dataTransfer.files;
-});
+// --- STATE ---
+let events = [];
+let currentEvent = null;
 
-// Üniversite listesini doldur
+// --- ELEMENTS ---
+const listEl     = document.getElementById("eventList");
+const artistEl   = document.getElementById("artist");
+const uniSelect  = document.getElementById("uniSelect");
+const locationEl = document.getElementById("location");
+const datetimeEl = document.getElementById("datetime");
+const saveBtn    = document.getElementById("saveConcert");
+const editBtn    = document.getElementById("editConcert");
+const deleteBtn  = document.getElementById("deleteConcert");
+const modal      = document.getElementById("confirmModal");
+const yesBtn     = document.getElementById("confirmYes");
+const noBtn      = document.getElementById("confirmNo");
+
+// --- INIT ---
 window.addEventListener("DOMContentLoaded", () => {
-  const uniSelect = document.getElementById("uniSelect");
-  const uniList = [
-    { id: "itu", name: "İTÜ" },
-    { id: "bo", name: "Boğaziçi" },
-    { id: "odtu", name: "ODTÜ" }
-  ];
-  uniList.forEach(u => {
+  ["İTÜ","Boğaziçi","ODTÜ"].forEach(u => {
     const opt = document.createElement("option");
-    opt.value = u.id; opt.textContent = u.name;
+    opt.value = u; opt.textContent = u;
     uniSelect.appendChild(opt);
   });
+  renderList();
 });
 
-// Konser kaydet: yıl kısıtı kontrolü ekleniyor
-document.getElementById("saveConcert").addEventListener("click", () => {
-  const dt = document.getElementById("datetime").value;
-  const pattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/;
-  if (!pattern.test(dt)) {
-    alert("Lütfen 4 haneli yıl içeren geçerli bir tarih-saat girin (YYYY-MM-DDThh:mm).");
-    return;
+// --- RENDER LIST ---
+function renderList() {
+  listEl.querySelectorAll(".event-item").forEach(n => n.remove());
+  events.forEach(ev => {
+    const div = document.createElement("div");
+    div.className = "event-item";
+    div.textContent = ev.artist;
+    div.onclick = () => selectEvent(ev, div);
+    listEl.appendChild(div);
+  });
+}
+
+// --- SELECT EVENT ---
+function selectEvent(ev, div) {
+  currentEvent = ev;
+  listEl.querySelectorAll(".event-item").forEach(n => n.classList.remove("active"));
+  div.classList.add("active");
+  artistEl.value   = ev.artist;
+  uniSelect.value  = ev.uni;
+  locationEl.value = ev.location;
+  datetimeEl.value = ev.datetime;
+  setDisabled(true);
+  saveBtn.disabled   = true;
+  editBtn.disabled   = false;
+  deleteBtn.disabled = false;
+}
+
+// --- DISABLE/ENABLE FORM ---
+function setDisabled(dis) {
+  [artistEl, uniSelect, locationEl, datetimeEl].forEach(e => e.disabled = dis);
+}
+
+// --- SAVE (CREATE/UPDATE) ---
+saveBtn.addEventListener("click", () => {
+  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(datetimeEl.value)) {
+    return alert("Tarih formatı YYYY-MM-DDThh:mm olmalı");
   }
-  alert("Konser kaydediliyor... (backend call)");
+  const data = {
+    id: currentEvent ? currentEvent.id : Date.now(),
+    artist:   artistEl.value.trim(),
+    uni:      uniSelect.value,
+    location: locationEl.value.trim(),
+    datetime: datetimeEl.value
+  };
+  if (!data.artist || !data.uni || !data.location) {
+    return alert("Tüm alanları doldurun.");
+  }
+  if (currentEvent) {
+    events = events.map(e => e.id === data.id ? data : e);
+  } else {
+    events.push(data);
+  }
+  resetForm();
+  renderList();
 });
 
-document.getElementById("editConcert").addEventListener("click", () => {
-  alert("Konser düzenleniyor...");
-});
-document.getElementById("deleteConcert").addEventListener("click", () => {
-  if (confirm("Silmek istediğine emin misin?")) alert("Konser siliniyor...");
+// --- EDIT ---
+editBtn.addEventListener("click", () => {
+  if (!currentEvent) return alert("Önce bir etkinlik seçin.");
+  setDisabled(false);
+  saveBtn.disabled = false;
 });
 
-// Duyuru Yönetimi
-const announcementText = document.getElementById("announcementText");
-const announcementList = document.getElementById("announcementList");
+// --- DELETE ---
+deleteBtn.addEventListener("click", () => modal.classList.remove("hidden"));
+yesBtn.addEventListener("click", () => {
+  events = events.filter(e => e.id !== currentEvent.id);
+  resetForm();
+  renderList();
+  modal.classList.add("hidden");
+});
+noBtn.addEventListener("click", () => modal.classList.add("hidden"));
+
+// --- RESET FORM ---
+function resetForm() {
+  document.getElementById("concertForm").reset();
+  currentEvent = null;
+  setDisabled(false);
+  saveBtn.disabled   = false;
+  editBtn.disabled   = true;
+  deleteBtn.disabled = true;
+  listEl.querySelectorAll(".event-item").forEach(n => n.classList.remove("active"));
+}
+
+// --- ANNOUNCEMENT ---
 document.getElementById("addAnnouncement").addEventListener("click", () => {
-  const text = announcementText.value.trim();
+  const txt = document.getElementById("announcementText");
+  const text = txt.value.trim();
   if (!text) return;
   const card = document.createElement("div");
   card.className = "announcement-card";
   card.innerHTML = `<p>${text}</p><button class="del-ann">×</button>`;
   card.querySelector(".del-ann").addEventListener("click", () => card.remove());
-  announcementList.appendChild(card);
-  announcementText.value = "";
+  document.getElementById("announcementList").appendChild(card);
+  txt.value = "";
 });
 
-// Hesap ayarları
+// --- PASSWORD SHOW/HIDE & VALIDATION ---
+document.querySelectorAll(".toggle-password").forEach(icon => {
+  icon.addEventListener("click", () => {
+    const tgt = document.getElementById(icon.dataset.target);
+    const isPwd = tgt.type === "password";
+    tgt.type = isPwd ? "text" : "password";
+    icon.textContent = isPwd ? "👁‍🗨" : "👁️";
+  });
+});
+
 document.getElementById("saveAccount").addEventListener("click", () => {
-  const newPass = document.getElementById("newPassword").value;
-  const confirmPass = document.getElementById("confirmPassword").value;
+  const p1 = document.getElementById("newPassword").value;
+  const p2 = document.getElementById("confirmPassword").value;
   const msg = document.getElementById("accountMessage");
   msg.textContent = "";
-  if (!newPass || !confirmPass) {
-    msg.textContent = "Lütfen tüm alanları doldurun.";
+  const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
+  if (!p1 || !p2) { msg.textContent = "Lütfen tüm alanları doldurun."; return; }
+  if (p1 !== p2)  { msg.textContent = "Şifreler eşleşmiyor."; return; }
+  if (!regex.test(p1)) {
+    msg.textContent = "Şifre en az 8 karakter, bir büyük harf, bir küçük harf, bir sembol içermeli.";
     return;
   }
-  if (newPass !== confirmPass) {
-    msg.textContent = "Şifreler eşleşmiyor.";
-    return;
-  }
-  alert("Şifre güncelleniyor...");
+  alert("Şifre güncellendi! (backend)");
 });
